@@ -2,6 +2,7 @@
 // Melbourne Public Transport Journey Planner
 
 // Station data and adjacency list
+var lines = ['Alamein', 'Glen Waverly', 'Sandringham'];
 var railNetwork = {
   'Flinders Street': {
     lines: ['Alamein'],
@@ -44,7 +45,7 @@ var railNetwork = {
     neighbours: ['Richmond', 'Tooronga']
   },
   'Tooronga': {
-    lines: ['Tooronga'],
+    lines: ['Glen Waverly'],
     neighbours: ['Kooyong']
   },
   'Southern Cross': {
@@ -66,22 +67,29 @@ var railNetwork = {
 };
 
 // Read and validate user input
-var startPoint = prompt('Enter origin:');
+var line = prompt('Enter train line:');
+var startPoint;
 var endPoint;
 var solution;
 
-if (typeof railNetwork[startPoint] === 'undefined') {
-  console.log('Start station not a valid station');
+if (lines.indexOf(line) === -1) {
+  console.log('Line does not exist');
 }
 else {
-  endPoint = prompt('Enter destination:');
-  if (typeof railNetwork[endPoint] === 'undefined') {
-    console.log('End station not a valid station');
+  startPoint = prompt('Enter starting station:');
+  if (typeof railNetwork[startPoint] === 'undefined') {
+    console.log('Start station not a valid station');
   }
-  // If valid, find path between stations
   else {
-    solution = findRoute(railNetwork, startPoint, endPoint);
-    printResults(railNetwork, startPoint, endPoint, solution);
+    endPoint = prompt('Enter destination:');
+    if (typeof railNetwork[endPoint] === 'undefined') {
+      console.log('End station not a valid station');
+    }
+    // If valid, find path between stations
+    else {
+      solution = findRoute(railNetwork, startPoint, endPoint);
+      printResults(railNetwork, startPoint, endPoint, solution);
+    }
   }
 }
 
@@ -139,10 +147,31 @@ function reconstructPath(tree, startPoint, endPoint) {
 
 // Display results
 function printResults(railNetwork, startPoint, endPoint, route) {
+  // Print overview
+  console.log('initial rail line: ' + line);
   console.log('origin: ' + startPoint);
   console.log('destination: ' + endPoint);
   console.log('');
-  console.log(route.join(' -----> '));
+
+  // Print stations along route
+  var routeString = '';
+  for (var i = 0; i < route.length - 1; i++) {
+    routeString += route[i] + ' -----> ';
+
+    var currentStation = railNetwork[route[i]];
+    var nextStation = railNetwork[route[i + 1]];
+
+    // Notify user of line changes
+    if (nextStation.lines.indexOf(line) === -1) {
+      routeString += ' [Switch to ' + nextStation.lines[0]
+        + ' line] -----> ';
+      line = nextStation.lines[0];
+    }
+  }
+  routeString += route[route.length - 1];
+  console.log(routeString);
+
+  // Print statistics
   console.log('');
   console.log(route.length - 1 + ' stops total');
 }
