@@ -25,8 +25,6 @@ do {
     var destination = prompt("To Where?");
 } while(validStops.indexOf(destination) === -1);
 
-
-
 var originLine;
 var destinationLine;
 var stopCount = 0;
