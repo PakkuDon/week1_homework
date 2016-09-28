@@ -15,11 +15,21 @@ var sandringham = {
   stops: ['Southern Cross', 'Richmond', 'South Yarra', 'Prahran', 'Windsor']
 }
 
-var origin = prompt("From where?");
-var destination = prompt("To Where?");
+var validStops = alemein.stops.concat(glenwav.stops, sandringham.stops);
+
+do {
+    var origin = prompt("From where?");
+} while(validStops.indexOf(origin) === -1);
+
+do {
+    var destination = prompt("To Where?");
+} while(validStops.indexOf(destination) === -1);
+
+
 
 var originLine;
 var destinationLine;
+var stopCount = 0;
 
 if (alemein.stops.indexOf(origin) !== -1) {
   originLine = alemein;
@@ -52,11 +62,13 @@ if (originLine === destinationLine) {
     if (destinationIndex > originIndex) {
       for (var i = originIndex; i <= destinationIndex; i++) {
         console.log(originLine.stops[i]);
+        stopCount++;
       }
     }
     else {
       for (var i = originIndex; i >= destinationIndex; i--) {
         console.log(originLine.stops[i]);
+        stopCount++;
       }
     }
   }
@@ -69,11 +81,13 @@ else {
   if (indexOfRichmond > originIndex) {
     for (var i = originIndex; i <= indexOfRichmond; i++) {
       console.log(originLine.stops[i]);
+      stopCount++;
     }
   }
   else {
     for (var i = originIndex; i >= indexOfRichmond; i--) {
       console.log(originLine.stops[i]);
+      stopCount++;
     }
   }
 
@@ -87,12 +101,17 @@ else {
   if (indexOfRichmond < destinationIndex) {
     for (var i = indexOfRichmond + 1; i <= destinationIndex; i++) {
       console.log(destinationLine.stops[i]);
+      stopCount++;
     }
   }
   else {
     for (var i = indexOfRichmond - 1; i >= destinationIndex; i--) {
       console.log(destinationLine.stops[i]);
+      stopCount++;
     }
   }
 
 }
+
+console.log("-------------")
+console.log("Total Stops: " + stopCount);
