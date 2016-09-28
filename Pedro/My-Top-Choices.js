@@ -44,3 +44,28 @@ function chooseSuffix(numFound){
       return "th";
   }
 }
+
+// multiplication tables  **** needs to be finished ***
+
+for (var i = 0; i <= 10 ; i++) {
+  console.log();
+}
+
+
+//vegan
+var menu = ['steak', 'pork chops', 'fruit salad', 'tofurkey'];
+var choice = 'steak';
+
+if (choice === 'steak' || choice === 'pork chops') {
+  console.log('meat');
+}else {
+  console.log('vegan');
+}
+
+//top choices ******** need fix *******
+
+var simpsons = [ 'ned', 'homer', 'bart'];
+
+for (var i = 1; i <= simpsons.length; i++) {
+  console.log('my ' + suffix[i] + ' choice is ' + simpsons[i]);
+}
