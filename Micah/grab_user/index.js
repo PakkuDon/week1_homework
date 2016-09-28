@@ -18,7 +18,11 @@ console.log('Hello ' + name);
 // Bonus: Use a nested for loop to show the tables for every multiplier from 1 to 10 (100 results total).
 
 for (var i = 0; i <= 10; i++) {
-  console.log(i*9);
+  console.log(i + ' times 9 = '+ (i*9));
+
+  for (var j = 1; j <= 10; j++) {
+    console.log(j + ' times ' + i + ' = ' + (i*j));
+  }
 }
 
 // Part 3 - The Vegan Test
@@ -37,9 +41,7 @@ for (var i = 0; i <= 10; i++) {
 var menu = ['Steak', 'Fruit Salad', 'Tofurkey', 'Pork Chops'];
 var menuChoice = prompt('What would you like on the menu? ');
 
-  if (menuChoice === 'Fruit Salad') {
-      console.log('This cuisine is Vegan friendly.');
-    } else if (menuChoice === 'Tofurkey') {
+  if (menuChoice === 'Fruit Salad' || menuChoice === 'Tofurkey') {
       console.log('This cuisine is Vegan friendly.');
     } else {
     console.log('Vegans Beware!');
