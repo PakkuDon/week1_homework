@@ -2,68 +2,77 @@
 // Melbourne Public Transport Journey Planner
 
 // Station data and adjacency list
-var lines = ['Alamein', 'Glen Waverly', 'Sandringham'];
-var railNetwork = {
+var stations = {
   'Flinders Street': {
-    lines: ['Alamein'],
     neighbours: ['Richmond']
   },
   'Richmond': {
-    lines: ['Alamein', 'Glen Waverly', 'Sandringham'],
     neighbours: ['Flinders Street', 'East Richmond', 'Kooyong', 'Parliament', 'Southern Cross', 'South Yarra']
   },
   'East Richmond': {
-    lines: ['Alamein'],
     neighbours: ['Richmond', 'Burnley']
   },
   'Burnley': {
-    lines: ['Alamein'],
     neighbours: ['Hawthorn', 'East Richmond']
   },
   'Hawthorn': {
-    lines: ['Alamein'],
     neighbours: ['Burnley', 'Glenferrie']
   },
   'Glenferrie': {
-    lines: ['Alamein'],
     neighbours: ['Hawthorn']
   },
   'Flagstaff': {
-    lines: ['Glen Waverly'],
     neighbours: ['Melbourne Central']
   },
   'Melbourne Central': {
-    lines: ['Glen Waverly'],
     neighbours: ['Flagstaff', 'Parliament']
   },
   'Parliament': {
-    lines: ['Glen Waverly'],
     neighbours: ['Melbourne Central', 'Richmond']
   },
   'Kooyong': {
-    lines: ['Glen Waverly'],
     neighbours: ['Richmond', 'Tooronga']
   },
   'Tooronga': {
-    lines: ['Glen Waverly'],
     neighbours: ['Kooyong']
   },
   'Southern Cross': {
-    lines: ['Sandringham'],
     neighbours: ['Richmond']
   },
   'South Yarra': {
-    lines: ['Sandringham'],
     neighbours: ['Richmond', 'Prahran']
   },
   'Prahran': {
-    lines: ['Sandringham'],
     neighbours: ['South Yarra', 'Windsor']
   },
   'Windsor': {
-    lines: ['Sandringham'],
     neighbours: ['Prahran']
   }
+};
+var lines = {
+  'Alamein': [
+    stations['Flinders Street'],
+    stations['Richmond'],
+    stations['East Richmond'],
+    stations['Burnley'],
+    stations['Hawthorn'],
+    stations['Glenferrie']
+  ],
+  'Glen Waverly': [
+    stations['Flagstaff'],
+    stations['Melbourne Central'],
+    stations['Parliament'],
+    stations['Richmond'],
+    stations['Kooyong'],
+    stations['Tooronga']
+  ],
+  'Sandringham': [
+    stations['Southern Cross'],
+    stations['Richmond'],
+    stations['South Yarra'],
+    stations['Prahran'],
+    stations['Windsor']
+  ]
 };
 
 // Read and validate user input
@@ -72,29 +81,32 @@ var startPoint;
 var endPoint;
 var solution;
 
-if (lines.indexOf(line) === -1) {
+if (typeof lines[line] === 'undefined') {
   console.log('Line does not exist');
 }
 else {
   startPoint = prompt('Enter starting station:');
-  if (typeof railNetwork[startPoint] === 'undefined') {
+  if (typeof stations[startPoint] === 'undefined') {
     console.log('Start station not a valid station');
+  }
+  else if (lines[line].indexOf(stations[startPoint]) === -1) {
+    console.log('Start station not in selected line');
   }
   else {
     endPoint = prompt('Enter destination:');
-    if (typeof railNetwork[endPoint] === 'undefined') {
+    if (typeof stations[endPoint] === 'undefined') {
       console.log('End station not a valid station');
     }
     // If valid, find path between stations
     else {
-      solution = findRoute(railNetwork, startPoint, endPoint);
-      printResults(railNetwork, startPoint, endPoint, solution);
+      solution = findRoute(stations, startPoint, endPoint);
+      printResults(stations, lines, startPoint, endPoint, solution);
     }
   }
 }
 
 // Find route between start point and end point
-function findRoute(network, startPoint, endPoint) {
+function findRoute(stations, startPoint, endPoint) {
   var visitedNodes = [];
   var tree = {};
   var stack = [];
@@ -116,12 +128,9 @@ function findRoute(network, startPoint, endPoint) {
     }
 
     // Else, add neighbours to stack
-    var neighbours = railNetwork[current].neighbours;
+    var neighbours = stations[current].neighbours;
     for (var i = 0; i < neighbours.length; i++) {
       if (visitedNodes.indexOf(neighbours[i]) === -1) {
-        if (tree[neighbours[i]]) {
-          console.log('duplicate');
-        }
         tree[neighbours[i]] = current;
         stack.push(neighbours[i]);
       }
@@ -146,26 +155,34 @@ function reconstructPath(tree, startPoint, endPoint) {
 }
 
 // Display results
-function printResults(railNetwork, startPoint, endPoint, route) {
+function printResults(stations, lines, startPoint, endPoint, route) {
   // Print overview
   console.log('initial rail line: ' + line);
   console.log('origin: ' + startPoint);
   console.log('destination: ' + endPoint);
   console.log('');
 
+  var lineNames = Object.keys(lines);
+
   // Print stations along route
   var routeString = '';
   for (var i = 0; i < route.length - 1; i++) {
     routeString += route[i] + ' -----> ';
 
-    var currentStation = railNetwork[route[i]];
-    var nextStation = railNetwork[route[i + 1]];
+    var currentStation = stations[route[i]];
+    var nextStation = stations[route[i + 1]];
 
     // Notify user of line changes
-    if (nextStation.lines.indexOf(line) === -1) {
-      routeString += ' [Switch to ' + nextStation.lines[0]
+    if (lines[line].indexOf(nextStation) === -1) {
+      // Find next station's line
+      var nextLine = lineNames.filter(function(line) {
+        return lines[line].indexOf(nextStation) !== -1;
+      })[0];
+
+      routeString += ' [Switch to ' + nextLine
         + ' line] -----> ';
-      line = nextStation.lines[0];
+
+      line = nextLine;
     }
   }
   routeString += route[route.length - 1];
