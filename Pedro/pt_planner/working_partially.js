@@ -1,19 +1,19 @@
 // lines is a array of objects containing name(string) and stations(array of strings)
-var lines = [ { name: 'Alamain',
+var lines = [ { name: 'alamain',
                 stations:['Flinders Street',
                           'Richmond',
                           'East Richmond',
                           'Burnley',
                           'Hawthorn',
                           'Glenferrie']},
-              { name: 'GlenWaverly',
+              { name: 'glenWaverly',
                 stations:['Flagstaff',
                           'Melbourne Central',
                           'Parliament',
                           'Richmond',
                           'Kooyong',
                           'Tooronga']},
-               { name: 'Sandringham',
+               { name: 'sandringham',
                  stations:['Southern Cross',
                            'Richmond',
                            'South Yarra',
@@ -21,10 +21,8 @@ var lines = [ { name: 'Alamain',
                            'Windsor']}];
 
 var rich = "Richmond";
-var originLine ;
-var origin ;
-var destinationLine ;
-var destination ;
+var origin = "Flagstaff";
+var destination = "Glenferrie";
 var originData = { lineIndex: null,
                    name: null,
                    stationIndex: null,
@@ -34,51 +32,9 @@ var destinationData = { lineIndex: null,
                         stationIndex: null,
                         connectionIndex: null};
 
-      // ----------------Still under development ----------------------
-
-function inputStationOrig() {
-  var i = 1
-  for (var y = 0; y < lines[i].stations.length; i++) {
-    var listStationOrig = document.getElementById('station-origin');
-    var createOption = document.createElement('option');
-    createOption.value = y;
-    createOption.innerHTML = (lines[i].stations[y]);
-    listStationOrig.appendChild(createOption);
-  }
-}
-function inputLineDest() {
-  for (var i = 0; i < lines.length; i++) {
-    var listLineDest = document.getElementById('line-destination');
-    var createOption = document.createElement('option');
-    createOption.value = i;
-    createOption.innerHTML = (lines[i].name);
-    listLineOrig.appendChild(createOption);
-  }
-}
-function inputStationDest() {
-  for (var i = 0; i < lines.length; i++) {
-    var listStationDest = document.getElementById('station-destination');
-    var createOption = document.createElement('option');
-    createOption.value = i;
-    createOption.innerHTML = (lines[i].name);
-    listLineOrig.appendChild(createOption);
-  }
-}
-inputLineOrig();
-// inputStationOrig();
-// inputLineDest();
-// inputStationDest();
-// --------------------------------------------------------------
-  //   for (var i = 0; i < lines.length; i++) {
-  //     document.write('<select><option value=1>value1</option></select>');
-  //
-  //     "<option value=" + lines[i].name + ">"+ lines[i].name + "</option>"
-  //   }
-  // )
-
  // find origin line
   for (var i = 0; i < lines.length; i++) {
-    var lineTest = lines[i];
+    var lineTest = lines[i]
     x = lineTest.stations.indexOf(origin);
     if (x >= 0) { // if 'x' is a valid index of origin, give values to originData
       originData.lineIndex = i;
@@ -153,13 +109,4 @@ inputLineOrig();
       console.log('Total Stops: ' + (totalStops - 1)); // Total Stops from origin to dest.
     }
 
-    function inputLineOrig() {
-      for (var i = 0; i < lines.length; i++) {
-        var listLineOrig = document.getElementById('line-origin');
-        console.log(listLineOrig);
-        // var createOption = document.createElement('option');
-        // createOption.value = i;
-        // createOption.innerHTML = (lines[i].name);
-        // listLineOrig.appendChild(createOption);
-      }
-    }
+    printStations(originData, destinationData);
